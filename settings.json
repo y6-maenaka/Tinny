@@ -1,0 +1,11 @@
+
+
+
+upload_dir : UPLOAD
+download_dir : DOWNLOAD
+cache_dir : .CACHE
+
+boot_nodes_file : boot_nodes.json
+max_nodes : 256
+use_links : TCP
+
