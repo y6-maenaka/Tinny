@@ -8,6 +8,8 @@
 #include <boost/asio.hpp>
 #include <boost/asio/local/stream_protocol.hpp>
 
+#include <interface/common.hpp>
+
 
 using namespace boost::asio;
 using namespace boost::asio::local;
@@ -18,9 +20,6 @@ namespace tinny
   namespace interface
   {
 
-  
-	constexpr std::string SOCKET_PATH = "/tmp/tinny_socket";
-   
 
 	class cui_client
 	{
@@ -30,6 +29,7 @@ namespace tinny
 
 	  private:
 		boost::asio::io_context& _io_ctx;
+		boost::asio::strand< boost::asio::io_context::executor_type > _strand;
 	};
 
 

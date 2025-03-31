@@ -1,4 +1,4 @@
-#include <p2p/message.hpp>
+#include <p2p/net/message.hpp>
 
 
 namespace tinny

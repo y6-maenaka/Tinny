@@ -9,8 +9,8 @@
 
 #include "boost/asio.hpp"
 
-#include <p2p/buffer.hpp>
-#include <p2p/message.hpp>
+#include <p2p/net/buffer.hpp>
+#include <p2p/net/message.hpp>
 
 
 namespace tinny

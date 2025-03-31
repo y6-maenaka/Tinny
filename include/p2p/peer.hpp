@@ -7,7 +7,7 @@
 
 #include "boost/asio.hpp"
 
-#include <p2p/link.hpp>
+#include <p2p/net/link.hpp>
 
 
 namespace tinny

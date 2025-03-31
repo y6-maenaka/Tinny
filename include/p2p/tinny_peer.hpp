@@ -6,7 +6,7 @@
 #include <memory>
 
 #include <p2p/peer.hpp>
-#include <p2p/link.hpp>
+#include <p2p/net/link.hpp>
 
 #include <boost/asio.hpp>
 

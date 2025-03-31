@@ -1,4 +1,6 @@
 #include <interface/client.hpp>
+#include <thread>
+#include <chrono>
 
 
 namespace tinny
@@ -7,29 +9,47 @@ namespace tinny
   {
 
 
-	cui_client::cui_client( boost::asio::io_context& io_ctx ) : _io_ctx(io_ctx)
+	cui_client::cui_client( boost::asio::io_context& io_ctx ) :
+	  _io_ctx(io_ctx)
+	  , _strand( boost::asio::make_strand(io_ctx) )
 	{
-	  return;
+	  // ::unlink( tinny::interface::SOCKET_PATH.c_str() ); // 指定したファイルへのリンク(参照)を削除する
 	}
 
 	void cui_client::send( std::vector<std::string> tokens )
 	{
 	  std::string command;
+	  for( const auto& token : tokens ) command += token + " ";
+	  command += "\n";
+  
+	  auto sock = std::make_shared<boost::asio::local::stream_protocol::socket>(_io_ctx);
+	  boost::asio::local::stream_protocol::endpoint ep(SOCKET_PATH);
 
-	  boost::asio::local::stream_protocol::socket sock(_io_ctx); // この場限りのソケットを作成
-	  sock.connect( stream_protocol::endpoint(SOCKET_PATH) );
-	  
-	  boost::system::error_code ec;
-	  write( sock, buffer(command), ec );
+	  sock->async_connect( ep 
+		  , boost::asio::bind_executor( _strand
+			, [this, sock, command]( const boost::system::error_code &ec )
+			{
+			  if( ec )
+			  {
+			  std::cerr << "サーバ接続エラー" << ec.message() << "\n";
+			  return;
+			  }
 
-	  if( ec )
-	  {
-		std::cerr << "通信エラー" << "\n";
-	  }
-	  else
-	  {
-		std::cout << "コマンド受信" << "\n";
-	  }
+			  boost::asio::async_write( *sock, boost::asio::buffer(command)
+				  , boost::asio::bind_executor(_strand
+					, [sock](const boost::system::error_code& ec, std::size_t)
+					{
+					if( ec ) std::cerr << "ユーザコマンド通信エラー" << ec.message() << "\n";
+					else std::cout << "コマンド送信完了" << "\n";
+
+					boost::system::error_code shutdown_ec;
+					sock->shutdown( boost::asio::socket_base::shutdown_both, shutdown_ec );
+
+					boost::system::error_code close_ec;
+					sock->close(close_ec);
+
+					}));
+			}));
 	}
 
 

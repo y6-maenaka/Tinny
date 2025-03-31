@@ -6,8 +6,8 @@
 
 #include <boost/asio.hpp>
 
-#include <core_context.hpp>
-#include <command.hpp>
+#include <core/core_context.hpp>
+#include <common/command.hpp>
 #include <interface/server.hpp>
 
 
@@ -28,9 +28,9 @@ namespace tinny
 		core_context _core_ctx;
 
 		void process_command( command &cmd );
-		static std::unique_ptr<command> parse_tokens( tinny::server::tokens tokens );
+		static std::unique_ptr<command> parse_tokens( tinny::interface::server::tokens tokens );
 
-		std::shared_ptr< tinny::server > _commandline_server; 
+		std::shared_ptr< tinny::interface::server > _commandline_server; 
 	};
 
 
