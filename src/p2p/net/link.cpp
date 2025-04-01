@@ -48,6 +48,18 @@ namespace tinny
 		}
 	}
 
+	bool tcp_link::is_open() const
+	{
+	  return _sock.is_open();
+	}
+
+	void tcp_link::close() 
+	{
+	  boost::system::error_code ec;
+	  _sock.cancel(ec);
+	  _sock.close(ec);
+	}
+
 	void tcp_link::async_send( const buffer& buff, link::send_handler handler )
 	{
 	  auto send_buff = buff.data();

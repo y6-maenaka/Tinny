@@ -8,6 +8,7 @@
 #include "boost/asio.hpp"
 
 #include <p2p/net/link.hpp>
+#include <p2p/net/buffer.hpp>
 
 
 namespace tinny
@@ -29,7 +30,7 @@ namespace tinny
 
 		explicit peer( const boost::asio::ip::tcp::endpoint& ep, boost::asio::io_context& io_ctx );
 
-		void async_send( const message& msg, send_handler handler );
+		void async_send( const buffer& buff, send_handler handler );
 		void async_receive( receive_handler handler );
 		// std::size_t sync_send( const message& msg );
 		// std::size_t sync_receive();
@@ -38,11 +39,9 @@ namespace tinny
 
 	  protected:
 		virtual void pong(); // use control link ( default handler )
-
-	  private:
-		const id _id;
-
 		std::unique_ptr<link> _control_link; // 通常は一つのリンクを保持
+		
+		const id _id;
 	};
 
 

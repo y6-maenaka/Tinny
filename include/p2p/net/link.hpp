@@ -33,6 +33,9 @@ namespace tinny
 		virtual void async_send( const buffer& buff, send_handler handler ) = 0;
 		virtual void async_receive( receive_handler handler ) = 0;
 
+		virtual bool is_open() const = 0;
+		virtual void close() = 0;
+
 		// virtual std::size_t sync_send( data_type& buff ) = 0;
 		// virtual std::size_t sync_receive() = 0; 
 	};
@@ -46,6 +49,9 @@ namespace tinny
 
 		void async_send( const buffer& buff, send_handler handler ) override;
 		void async_receive( receive_handler handler ) override;
+
+		bool is_open() const override;
+		void close() override;
 
 		// virtual std::size_t sync_send( data_type& buff ) override;
 		// virtual std::size_t sync_receive() override;

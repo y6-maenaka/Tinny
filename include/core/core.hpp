@@ -7,7 +7,9 @@
 #include <boost/asio.hpp>
 
 #include <core/core_context.hpp>
-#include <common/command.hpp>
+#include <core/peer_controller.hpp>
+#include <common/tinny.command.hpp>
+#include <common/general.command.hpp>
 #include <interface/server.hpp>
 
 
@@ -25,12 +27,13 @@ namespace tinny
 		void start();
 
 	  private:
-		core_context _core_ctx;
+		void process_command( std::shared_ptr<command> cmd );
+		static std::shared_ptr<command> parse_tokens( tinny::interface::server::tokens tokens );
 
-		void process_command( command &cmd );
-		static std::unique_ptr<command> parse_tokens( tinny::interface::server::tokens tokens );
-
-		std::shared_ptr< tinny::interface::server > _commandline_server; 
+		std::unique_ptr< tinny::interface::server > _commandline_server; 
+		std::shared_ptr< peer_controller > _peer_controller;
+  
+		std::shared_ptr< core_context > _core_ctx;
 	};
 
 

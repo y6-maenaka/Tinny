@@ -6,9 +6,10 @@ namespace tinny
 
 
   core::core( io_context& io_ctx ) :
-	_commandline_server( std::make_shared<tinny::interface::server>(io_ctx) )
+	_commandline_server( std::make_unique<tinny::interface::server>(io_ctx) )
+	, _peer_controller( std::make_unique<peer_controller>(io_ctx) )
   {
-	return;	
+	_core_ctx = std::make_shared<core_context>( _peer_controller );
   }
 
   void core::start()
@@ -17,32 +18,31 @@ namespace tinny
 	  (
 		[this](tinny::interface::server::tokens tokens)
 		{
-		  std::unique_ptr<command> cmd = core::parse_tokens( tokens );
+		  std::shared_ptr<command> cmd = core::parse_tokens( tokens );
 		  cmd->show();
-		  cmd->execute(_core_ctx);
+		  process_command( cmd );
 		} 
 	  );
   }
 
-  std::unique_ptr<command> core::parse_tokens( tinny::interface::server::tokens tokens )
+  std::shared_ptr<command> core::parse_tokens( tinny::interface::server::tokens tokens )
   {
+	std::shared_ptr< command > ret = nullptr;
 	if( std::find( command_list::aliases.begin(), command_list::aliases.end(), tokens[0] ) )
-	{
-	  std::unique_ptr< command > ret = std::make_unique< command_list >();
-	  return ret;
-	}
+	  ret = std::make_shared< command_list >();
 	else if( std::find( command_download::aliases.begin(), command_download::aliases.end(), tokens[0] ) )
+	  ret = std::make_shared< command_download >(); 
+	else if( std::find( command_ping::aliases.begin(), command_ping::aliases.end(), tokens[0] ) )
 	{
-	  std::unique_ptr< command > ret = std::make_unique< command_download >();
-	  return ret;
+	  ret = std::make_shared< command_ping >();
 	}
-
-	return nullptr;
+	
+	return ret;
   }
 
-  void core::process_command( command &cmd )
+  void core::process_command( std::shared_ptr<command> cmd )
   {
-	cmd.execute( _core_ctx );
+	cmd->execute( *_core_ctx );
   }
 
 
