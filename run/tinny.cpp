@@ -42,9 +42,7 @@ int main( int argc, const char *argv[] )
 	io_context io_ctx;
 	tinny::interface::cui_client clinet( io_ctx );
 
-	std::string command = "ls";
-	std::string count = "あああ";
-	std::vector< std::string > tokens = {command, count};
+	std::vector< std::string > tokens = args;
 
 	std::cout << "送信コマンド : ";
 	for( const auto& i : tokens )

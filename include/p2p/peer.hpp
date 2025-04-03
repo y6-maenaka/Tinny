@@ -5,10 +5,11 @@
 #include <memory>
 #include <array>
 
-#include "boost/asio.hpp"
+#include <boost/asio.hpp>
 
 #include <p2p/net/link.hpp>
 #include <p2p/net/buffer.hpp>
+#include <p2p/utils.hpp>
 
 
 namespace tinny
@@ -24,7 +25,8 @@ namespace tinny
 	{
 	  public:
 		using ref = std::shared_ptr<peer>;
-		using id = std::array< std::uint8_t, PEER_ID_LENGTH_BITS / sizeof(std::uint8_t) >; // トランスポートIDから作成される
+		static constexpr std::nullptr_t none = nullptr;
+		using id = std::size_t; // トランスポートIDから作成される
 		using send_handler = link::send_handler;
 		using receive_handler = link::receive_handler; // 今のところは共通でOK
 
@@ -36,9 +38,10 @@ namespace tinny
 		// std::size_t sync_receive();
 
 		virtual bool ping(); // use control link
+		const id get_id() const;
 
 	  protected:
-		virtual void pong(); // use control link ( default handler )
+		// virtual void pong(); // use control link ( default handler )
 		std::unique_ptr<link> _control_link; // 通常は一つのリンクを保持
 		
 		const id _id;

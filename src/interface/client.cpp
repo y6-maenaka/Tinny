@@ -18,6 +18,9 @@ namespace tinny
 
 	void cui_client::send( std::vector<std::string> tokens )
 	{
+	  if( tokens.size() > 0 && tokens[0] != "./Tinny" ) return; // 仮
+	  tokens.erase( tokens.begin() ); // アプリ識別子は削除
+
 	  std::string command;
 	  for( const auto& token : tokens ) command += token + " ";
 	  command += "\n";

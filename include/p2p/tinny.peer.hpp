@@ -17,7 +17,7 @@ namespace tinny
   {
   
 
-	class tinny_peer : protected peer
+	class tinny_peer : public peer
 	{
 	  public:
 		using ref = std::shared_ptr<tinny_peer>;

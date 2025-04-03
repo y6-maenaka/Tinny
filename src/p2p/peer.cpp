@@ -8,7 +8,7 @@ namespace tinny
 
 	peer::peer( const boost::asio::ip::tcp::endpoint& ep, boost::asio::io_context& io_ctx ) :
 	  _control_link( std::make_unique<tcp_link>(ep, io_ctx) )
-	  , _id{}
+	  , _id{ hash_ip_address(ep) }
 	{
 	  return;
 	}
@@ -26,6 +26,11 @@ namespace tinny
 	bool peer::ping()
 	{
 	  return false;
+	}
+
+	const peer::id peer::get_id() const
+	{
+	  return _id;
 	}
 
 

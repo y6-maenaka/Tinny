@@ -56,7 +56,7 @@ namespace tinny
 			session::tokens token_list;
 			std::string token;
 			while( iss >> token ) token_list.push_back( token );
-			
+
 			if( !token_list.empty() && _handler ) _handler(token_list);
 			
 			do_read(); // 次の読み込みを再帰的に実行

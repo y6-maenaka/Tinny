@@ -2,6 +2,8 @@
 #define F67A69BC_87D6_4027_B808_8E961C740BDB
 
 
+#include <regex>
+
 #include <boost/asio.hpp>
 
 #include <common/command.hpp>
@@ -20,8 +22,10 @@ namespace tinny
 
 	  void execute( core_context& core_ctx ) const override;
 
-	  static constexpr std::array< std::string_view, 2 > aliases = {"ping"}; 
+	  static constexpr std::array< std::string_view, 1 > aliases = {"ping"}; 
 	  void show() const override;
+
+	  static std::shared_ptr<command> parse(const std::vector<std::string>& tokens );
 
 	private:
 	  const boost::asio::ip::tcp::endpoint _ep; // udpは一旦考えない
